@@ -1,1 +1,81 @@
+//yatze
 
+
+int[] ones = { 0, 0, 0 };
+int[] twos = { 0, 0, 0 };
+int[] threes = { 0, 0, 0 };
+int[] fours = { 0, 0, 0 };
+int[] fives = { 0, 0, 0 };
+int[] sixes = { 0, 0, 0 };
+
+
+int[] pair = { 0, 0, 0 };
+int[] twoPair = { 0, 0, 0 };
+int[] tripplet = { 0, 0, 0 };
+int[] fourOfAKind = { 0, 0, 0 };
+int[] fullHouse = { 0, 0, 0 };
+int[] smallStraight = { 0, 0, 0 };
+int[] largeStraight = { 0, 0, 0 };
+int[] chance = { 0, 0, 0 };
+int[] yatzy = { 0, 0, 0 };
+int[] sum = { 0, 0, 0 };
+
+var r = new Random();
+int[] saved = { 0, 0, 0, 0, 0 };
+
+
+
+
+
+
+bool running = true;
+while (running)
+{
+    Console.Clear();
+    int[] dices = { 0, 0, 0, 0, 0 };
+    for (int i = 0; i != dices.Length; i++)
+    {
+        dices[i] = r.Next(1, 7);
+    }
+    for (int i = 0; i != dices.Length; i++)
+    {
+        if (saved[i] != 0)
+        {
+            dices[i] = saved[i];
+        }
+    }
+    for (int i = 0; i != dices.Length; i++)
+    {
+        Console.Write(dices[i] + ", ");
+    }
+    int saving = 1;
+    Console.WriteLine(" ");
+    for (int i = 0; i != saved.Length; i++)
+    {
+        Console.Write(saved[i] + ", ");
+    }
+    while (saving != 0)
+    {
+        Console.WriteLine("Vilken tärning vill du spara? skriv [0] för att inte spara någon");
+        saving = int.Parse(Console.ReadLine());
+        switch (saving)
+        {
+            case 1:
+                saved[0] = dices[0];
+                break;
+            case 2:
+                saved[1] = dices[1];
+                break;
+            case 3:
+                saved[2] = dices[2];
+                break;
+            case 4:
+                saved[3] = dices[3];
+                break;
+            case 5:
+                saved[4] = dices[4];
+                break;
+        }
+    }
+    
+}
