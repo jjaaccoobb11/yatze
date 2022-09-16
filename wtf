@@ -1,81 +1,198 @@
-//yatze
+using System;
+using System.Threading;
 
-
-int[] ones = { 0, 0, 0 };
-int[] twos = { 0, 0, 0 };
-int[] threes = { 0, 0, 0 };
-int[] fours = { 0, 0, 0 };
-int[] fives = { 0, 0, 0 };
-int[] sixes = { 0, 0, 0 };
-
-
-int[] pair = { 0, 0, 0 };
-int[] twoPair = { 0, 0, 0 };
-int[] tripplet = { 0, 0, 0 };
-int[] fourOfAKind = { 0, 0, 0 };
-int[] fullHouse = { 0, 0, 0 };
-int[] smallStraight = { 0, 0, 0 };
-int[] largeStraight = { 0, 0, 0 };
-int[] chance = { 0, 0, 0 };
-int[] yatzy = { 0, 0, 0 };
-int[] sum = { 0, 0, 0 };
-
-var r = new Random();
-int[] saved = { 0, 0, 0, 0, 0 };
-
-
-
-
-
-
-bool running = true;
-while (running)
+namespace Yatze
 {
-    Console.Clear();
-    int[] dices = { 0, 0, 0, 0, 0 };
-    for (int i = 0; i != dices.Length; i++)
+    class Program
     {
-        dices[i] = r.Next(1, 7);
-    }
-    for (int i = 0; i != dices.Length; i++)
-    {
-        if (saved[i] != 0)
+        static void PrintSheet(int[,] sheet)
         {
-            dices[i] = saved[i];
+            Console.Clear();
+            Console.WriteLine("p1 p2 p3");
+            for (int z = 0; z != sheet.GetLength(0); z++)
+            {
+                for (int v = 0; v != sheet.GetLength(1); v++)
+                {
+                    Console.Write(sheet[z, v] + ", ");
+                }
+                Console.WriteLine(" ");
+            }
+        }
+        static int[,] Sheet(int option, int[] dices, int player, int[,] SheetIn)
+        {
+            int playerIndex = player - 1;
+            int optionIndex = option - 1;
+            int[,] SheetOut = SheetIn;
+            Console.Clear();
+            PrintSheet(SheetIn);
+            Console.Write("Hur många poäng fick du: ");
+            int points = int.Parse(Console.ReadLine());
+            SheetOut[optionIndex, playerIndex] = points;
+            PrintSheet(SheetOut);
+            Console.Write("Tryck [enter] för att fortsätta: ");
+            Console.ReadLine();
+            return SheetOut;
+        }
+
+
+        static int PutOn(int[] finishedDice)
+        {
+            int[] dices = finishedDice; 
+            int option = 0;
+            bool putOn = true;
+            while (putOn)
+            {
+                Console.Clear();
+                for (int x = 0; x != dices.Length; x++)
+                {
+                    Console.Write(dices[x] + ", ");
+                }
+                Console.WriteLine(" ");
+                Console.WriteLine("[1] - för att sätta det på ettor");
+                Console.WriteLine("[2] - för att sätta det på tvåor");
+                Console.WriteLine("[3] - för att sätta det på treor");
+                Console.WriteLine("[4] - för att sätta det på fyror");
+                Console.WriteLine("[5] - för att sätta det på femor");
+                Console.WriteLine("[6] - för att sätta det på sexor");
+                Console.WriteLine("[7] - för att sätta det på par");
+                Console.WriteLine("[8] - för att sätta det på två par");
+                Console.WriteLine("[9] - för att sätta det på tretal");
+                Console.WriteLine("[10] - för att sätta det på fyrtal");
+                Console.WriteLine("[11] - för att sätta det på kåk");
+                Console.WriteLine("[12] - för att sätta det på liten stege");
+                Console.WriteLine("[13] - för att sätta det på stor stege");
+                Console.WriteLine("[14] - för att sätta det på chans");
+                Console.WriteLine("[15] - för att sätta det på yatze");
+                option = int.Parse(Console.ReadLine());
+                if (option < 16 && option >= 1)
+                {
+                    putOn = false;
+                }
+            }
+            return option;
+        }
+        static int[] ThrowDices(int player)
+        {
+            int[] dices = { 0, 0, 0, 0, 0 };
+            var r = new Random();
+            int[] saved = { 0, 0, 0, 0, 0 };
+            int throws = 0;
+            while (throws != 3)
+            {
+                Console.Clear();
+                Console.WriteLine("Spelare: " + player);
+                for (int i = 0; i != 5; i++)
+                {
+                    dices[i] = 0;
+                }
+                for (int i = 0; i != dices.Length; i++)
+                {
+                    dices[i] = r.Next(1, 7);
+                }
+                throws++;
+                for (int i = 0; i != dices.Length; i++)
+                {
+                    if (saved[i] != 0)
+                    {
+                        dices[i] = saved[i];
+                    }
+                }
+                if (throws != 3)
+                {
+                    for (int i = 0; i != dices.Length; i++)
+                    {
+                        Console.Write(dices[i] + ", ");
+                    }
+                    int saving = 1;
+                    Console.WriteLine(" ");
+                    while (saving != 0)
+                    {
+                        Console.WriteLine("Vilken tärning vill du spara? skriv [0] för att inte spara någon");
+                        saving = int.Parse(Console.ReadLine());
+                        switch (saving)
+                        {
+                            case 1:
+                                saved[0] = dices[0];
+                                break;
+                            case 2:
+                                saved[1] = dices[1];
+                                break;
+                            case 3:
+                                saved[2] = dices[2];
+                                break;
+                            case 4:
+                                saved[3] = dices[3];
+                                break;
+                            case 5:
+                                saved[4] = dices[4];
+                                break;
+                        }
+                    }
+                
+                }
+            }
+            return dices;
+        }
+        static void Main(string[] args)
+        {
+            //yatze
+
+
+            int[,] sheet = {{ 0, 0, 0 },
+                         { 0, 0, 0 },
+                         { 0, 0, 0 },
+                         { 0, 0, 0 },
+                         { 0, 0, 0 },
+                         { 0, 0, 0 },
+                         { 0, 0, 0 },
+                         { 0, 0, 0 },
+                         { 0, 0, 0 },
+                         { 0, 0, 0 },
+                         { 0, 0, 0 },
+                         { 0, 0, 0 },
+                         { 0, 0, 0 },
+                         { 0, 0, 0 },
+                         { 0, 0, 0 },
+                         { 0, 0, 0 }};
+
+            
+            
+
+
+
+
+
+
+            bool running = true;
+            int player = 3;
+            while (running)
+            {
+                switch (player)
+                {
+                    case 1:
+                        player = 2;
+                        break;
+                    case 2:
+                        player = 3;
+                        break;
+                    case 3:
+                        player = 1;
+                        break;
+                }
+                Console.Clear();
+                int[] finishedDice = ThrowDices(player);
+                Console.WriteLine("Spelare: " + player);
+                for (int i = 0; i != finishedDice.Length; i++)
+                {
+                    Console.Write(finishedDice[i] + ", ");
+                }
+                Console.WriteLine(" ");
+                Console.WriteLine("Var vill du sätta detta på?");
+                int option = PutOn(finishedDice);
+                Sheet(option, finishedDice, player, sheet);
+
+            }
+            running = false;
         }
     }
-    for (int i = 0; i != dices.Length; i++)
-    {
-        Console.Write(dices[i] + ", ");
-    }
-    int saving = 1;
-    Console.WriteLine(" ");
-    for (int i = 0; i != saved.Length; i++)
-    {
-        Console.Write(saved[i] + ", ");
-    }
-    while (saving != 0)
-    {
-        Console.WriteLine("Vilken tärning vill du spara? skriv [0] för att inte spara någon");
-        saving = int.Parse(Console.ReadLine());
-        switch (saving)
-        {
-            case 1:
-                saved[0] = dices[0];
-                break;
-            case 2:
-                saved[1] = dices[1];
-                break;
-            case 3:
-                saved[2] = dices[2];
-                break;
-            case 4:
-                saved[3] = dices[3];
-                break;
-            case 5:
-                saved[4] = dices[4];
-                break;
-        }
-    }
-    
 }
