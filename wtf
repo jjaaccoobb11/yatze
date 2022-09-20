@@ -5,6 +5,283 @@ namespace Yatze
 {
     class Program
     {
+        static int[] Counting(int[] dices)
+        {
+            int[] counting = { 0, 0, 0, 0, 0, 0 };
+            for (int i = 0; i != dices.Length; i++)
+            {
+                switch (dices[i])
+                {
+                    case 1:
+                        counting[0] += 1;
+                        break;
+                    case 2:
+                        counting[1] += 1;
+                        break;
+                    case 3:
+                        counting[2] += 1;
+                        break;
+                    case 4:
+                        counting[3] += 1;
+                        break;
+                    case 5:
+                        counting[4] += 1;
+                        break;
+                    case 6:
+                        counting[5] += 1;
+                        break;
+                }
+            }
+            return counting;
+        }
+        static int HowManyPoints(int option, int[] dices)
+        {
+            int[] counting = Counting(dices);
+            int points = 0;
+            switch (option)
+            {
+                case 1:
+                    points = counting[0] * 1;
+                    break;
+                case 2:
+                    points = counting[1] * 2;
+                    break;
+                case 3:
+                    points = counting[2] * 3;
+                    break;
+                case 4:
+                    points = counting[3] * 4;
+                    break;
+                case 5:
+                    points = counting[4] * 5;
+                    break;
+                case 6:
+                    points = counting[5] * 6;
+                    break;
+                case 7:
+                    int highPair = 0;
+                    for (int i = 0; i != counting.Length; i++)
+                    {
+                        if(counting[i] >= 2)
+                        {
+                            highPair = i + 1;
+                        }
+                    }
+                    points = highPair * 2;
+                    if (points == 0)
+                    {
+                        points = -1;
+                    }
+                    break;
+                case 8:
+                    int pairOne = 0;
+                    int pairTwo = 0;
+                    for (int i = 0; i < counting.Length; i++)
+                    {
+                        if (counting[i] >= 2)
+                        {
+                            if (pairOne == 0)
+                            {
+                                pairOne = i + 1;
+                            }
+                            else
+                            {
+                                pairTwo = i + 1;
+                            }
+                        }
+                    }
+                    points = pairOne * 2 + pairTwo * 2;
+                    if (pairOne == 0 || pairTwo == 0)
+                    {
+                        points = -1;
+                    }
+                    break;
+                case 9:
+                    for (int i = 0; i != counting.Length; i++)
+                    {
+                        if (counting[i] >= 3)
+                        {
+                            points = (i + 1) * 3;
+                        }
+                    }
+                    if (points == 0)
+                    {
+                        points = -1;
+                    }
+                    break;
+                case 10:
+                    for (int i = 0; i != counting.Length; i++)
+                    {
+                        if (counting[i] >= 4)
+                        {
+                            points = (i + 1) * 4;
+                        }
+                    }
+                    if (points == 0)
+                    {
+                        points = -1;
+                    }
+
+                    break;
+                case 11:
+                    for (int i = 0; i != counting.Length; i++)
+                    {
+                        if(counting[i] == 3)
+                        {
+                            points *= (i + 1) * 3;
+                        }
+                        if (counting[i] == 2)
+                        {
+                            points *= (i + 1) * 2;
+                        }
+                    }
+                    if (points == 0)
+                    {
+                        points = -1;
+                    }
+                    break;
+
+                case 12:
+                    for (int i = 0; i != counting.Length - 1; i++)
+                    {
+                        if(counting[i] >= 1)
+                        {
+                            points = 15;
+                        }
+                        else
+                        {
+                            points = -1;
+                            break;
+                        }
+                    }
+                    break;
+
+                case 13:
+                    for (int i = 1; i != counting.Length; i++)
+                    {
+                        if (counting[i] >= 1)
+                        {
+                            points = 15;
+                        }
+                        else
+                        {
+                            points = -1;
+                            break;
+                        }
+                    }
+                    break;
+                case 14:
+                    for (int i = 0; i != dices.Length; i++)
+                    {
+                        points += dices[i];
+                    }
+                    break;
+                case 15:
+                    points = 50;
+                    break;
+            }
+            return points;
+        }
+        static void ValidMoves(int[] dicesIn, int[,] sheet)
+        {
+            Console.Clear();
+            PrintSheet(sheet);
+            //int[] dices = { 1, 1, 1, 1, 1 };
+            int[] dices = dicesIn;
+            for (int i = 0; i != dices.Length; i++)
+            {
+                Console.Write(dices[i]);
+            }
+            Console.WriteLine(" ");
+
+            Console.WriteLine("Du kan sätta detta på: ");
+            bool running = true;
+            int[] counting = Counting(dices);
+            
+            for (int i = 0; i != counting.Length; i++)
+            {
+                if (counting[i] >= 2)
+                {
+                    Console.WriteLine("Ett par");
+                    break;
+                }
+            }
+
+            for (int i = 0; i != counting.Length; i++)
+            {
+                for (int x = 0; x != counting.Length; x++)
+                {
+                    if (i != x)
+                    {
+                        if (counting[x] >= 2 && counting[i] >= 2)
+                        {
+                            Console.WriteLine("Två par");
+                            running = false;
+                            break;
+                        }
+                    }
+                    if (running == false)
+                    {
+                        break;
+                    }
+                }
+                if (running == false)
+                {
+                    break;
+                }
+            }
+
+            for (int i = 0; i != counting.Length; i++)
+            {
+                if (counting[i] >= 3)
+                {
+                    Console.WriteLine("Tretal");
+                    break;
+                }
+            }
+            for (int i = 0; i != counting.Length; i++)
+            {
+                if (counting[i] >= 4)
+                {
+                    Console.WriteLine("Fyrtal");
+                    break;
+                }
+            }
+            for (int i = 0; i != counting.Length; i++)
+            {
+                if (counting[i] == 3)
+                {
+                    for (int x = 0; x != counting.Length; x++)
+                    {
+                        if (counting[x] == 2)
+                        {
+                            Console.WriteLine("kåk");
+                            break;
+                        }
+                    }
+                }
+            }
+            if (counting[0] >= 1 && counting[1] >= 1 && counting[2] >= 1 && counting[3] >= 1 && counting[4] >= 1)
+            {
+                Console.WriteLine("Liten stege");
+            }
+            if (counting[5] >= 1 && counting[1] >= 1 && counting[2] >= 1 && counting[3] >= 1 && counting[4] >= 1)
+            {
+                Console.WriteLine("stor stege");
+            }
+            Console.WriteLine("Chans");
+            for (int i = 0; i != counting.Length; i++)
+            {
+                if (counting[i] == 5)
+                {
+                    Console.WriteLine("Yatzy");
+                    break;
+                }
+            }
+
+
+
+        }
         static void PrintSheet(int[,] sheet)
         {
             Console.Clear();
@@ -18,6 +295,74 @@ namespace Yatze
                 Console.WriteLine(" ");
             }
         }
+
+        static int[,] SumAndBonus(int[,] sheet, bool p1Bonus, bool p2Bonus, bool p3Bonus)
+        {
+            bool p1 = p1Bonus;
+            bool p2 = p2Bonus;
+            bool p3 = p3Bonus;
+            int[,] sheetSum = sheet;
+            for (int x = 0; x != 3; x++)
+            {
+                int sum = 0;
+                for (int i = 0; i != 6; i++)
+                {
+                    sum += sheetSum[i, x];
+                    if (sum > 63)
+                    {
+                        switch (x)
+                        {
+                            case 0:
+                                p1 = true;
+                                break;
+                            case 1:
+                                p2 = true;
+                                break;
+                            case 2:
+                                p3 = true;
+                                break;
+                        }
+                    }
+                }
+            }
+            for (int x = 0; x != 3; x++)
+            {
+                int sum = 0;
+                for (int i = 0; i != 15; i++)
+                {
+                    if (sheetSum[i, x] != -1)
+                    {
+                        sum += sheetSum[i, x];
+                    }
+                }
+                switch (x)
+                {
+                    case 0:
+                        if (p1)
+                        {
+                            sum += 50;
+                        }
+                        sheetSum[15, 0] = sum;
+                        break;
+                    case 1:
+                        if (p2)
+                        {
+                            sum += 50;
+                        }
+                        sheetSum[15, 1] = sum;
+                        break;
+                    case 2:
+                        if (p3)
+                        {
+                            sum += 50;
+                        }
+                        sheetSum[15, 2] = sum;
+                        break;
+                }
+            }
+            PrintSheet(sheetSum);
+            return sheetSum;
+        }
         static int[,] Sheet(int option, int[] dices, int player, int[,] SheetIn)
         {
             int playerIndex = player - 1;
@@ -25,19 +370,20 @@ namespace Yatze
             int[,] SheetOut = SheetIn;
             Console.Clear();
             PrintSheet(SheetIn);
-            Console.Write("Hur många poäng fick du: ");
-            int points = int.Parse(Console.ReadLine());
+
+            // Method
+            int points = HowManyPoints(option, dices);
             SheetOut[optionIndex, playerIndex] = points;
-            PrintSheet(SheetOut);
+            SumAndBonus(SheetOut, false, false, false);
             Console.Write("Tryck [enter] för att fortsätta: ");
             Console.ReadLine();
             return SheetOut;
         }
 
 
-        static int PutOn(int[] finishedDice)
+        static int PutOn(int[] finishedDice, int[,] sheet, int playerIndex)
         {
-            int[] dices = finishedDice; 
+            int[] dices = finishedDice;
             int option = 0;
             bool putOn = true;
             while (putOn)
@@ -48,6 +394,7 @@ namespace Yatze
                     Console.Write(dices[x] + ", ");
                 }
                 Console.WriteLine(" ");
+                ValidMoves(dices, sheet);
                 Console.WriteLine("[1] - för att sätta det på ettor");
                 Console.WriteLine("[2] - för att sätta det på tvåor");
                 Console.WriteLine("[3] - för att sätta det på treor");
@@ -66,12 +413,21 @@ namespace Yatze
                 option = int.Parse(Console.ReadLine());
                 if (option < 16 && option >= 1)
                 {
-                    putOn = false;
+                    int optionIndex = option - 1;
+                    if (sheet[optionIndex, playerIndex] == 0)
+                    {
+                        putOn = false;
+                    }
+                    else
+                    {
+                        Console.Write("Du har redan satt något där!");
+                        Thread.Sleep(2000);
+                    }
                 }
             }
             return option;
         }
-        static int[] ThrowDices(int player)
+        static int[] ThrowDices(int player, int[,] sheet)
         {
             int[] dices = { 0, 0, 0, 0, 0 };
             var r = new Random();
@@ -80,6 +436,7 @@ namespace Yatze
             while (throws != 3)
             {
                 Console.Clear();
+                PrintSheet(sheet);
                 Console.WriteLine("Spelare: " + player);
                 for (int i = 0; i != 5; i++)
                 {
@@ -128,15 +485,16 @@ namespace Yatze
                                 break;
                         }
                     }
-                
+
                 }
             }
             return dices;
         }
         static void Main(string[] args)
         {
-            //yatze
-
+            bool p1Bonus = false;
+            bool p2Bonus = false;
+            bool p3Bonus = false;
 
             int[,] sheet = {{ 0, 0, 0 },
                          { 0, 0, 0 },
@@ -154,15 +512,6 @@ namespace Yatze
                          { 0, 0, 0 },
                          { 0, 0, 0 },
                          { 0, 0, 0 }};
-
-            
-            
-
-
-
-
-
-
             bool running = true;
             int player = 3;
             while (running)
@@ -180,7 +529,7 @@ namespace Yatze
                         break;
                 }
                 Console.Clear();
-                int[] finishedDice = ThrowDices(player);
+                int[] finishedDice = ThrowDices(player, sheet);
                 Console.WriteLine("Spelare: " + player);
                 for (int i = 0; i != finishedDice.Length; i++)
                 {
@@ -188,9 +537,12 @@ namespace Yatze
                 }
                 Console.WriteLine(" ");
                 Console.WriteLine("Var vill du sätta detta på?");
-                int option = PutOn(finishedDice);
+                int option = PutOn(finishedDice, sheet, player - 1);
                 Sheet(option, finishedDice, player, sheet);
+                for (int i = 0; i != 15; i++)
+                {
 
+                }
             }
             running = false;
         }
